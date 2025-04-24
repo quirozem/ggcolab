@@ -1,0 +1,38 @@
+import requests
+def leerArchivo():
+    #f = open("c://tempx//textoKeijzer.txt", "r", encoding='utf8')
+    with open('c:\\tempx\\textoKeijzer.txt', 'r') as f:
+      textoCompleto = f.read()
+      f.close()
+    return textoCompleto
+def leeGHub():
+  url = 'https://raw.githubusercontent.com/quirozem/Perros/main/perros.csv'
+  response = requests.get(url)
+  contenido = response.text
+  return contenido
+def read_github_raw(repo_owner, repo_name, file_path, branch='main'):
+    url = f"https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{branch}/{file_path}"
+    print(url)
+    try:
+      response = requests.get(url)
+      response.raise_for_status()  # Raise an exception for bad status codes (4xx or 5xx)\n",
+      return response.text         #todo bien\n",
+    except requests.exceptions.RequestException as e:
+      print("Error reading file from GitHub:")
+      return None                  #todo mal\n",
+
+#--- principal ----#\n",
+owner = "quirozem"
+repo = "Perros"
+path = "perros.csv"
+content = read_github_raw(owner, repo, path)
+print(content)
+
+#--- principal ----#
+at = leerArchivo()
+#at = read_github_raw(owner, repo, path)
+#at = leeGHub()
+print(at)
+#eliminarChars
+#armaDic
+#generaNube
