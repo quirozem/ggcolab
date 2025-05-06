@@ -1,0 +1,82 @@
+def eliminar_stopwords_basico(texto):
+    stopwords_es = ["a", "ante", "bajo", "cabe", "con", "contra", "de", "desde", "en", "entre", "hacia", "hasta", "para", "por", "según", "sin", "so", "sobre", "tras", "un", "una", "unos", "unas", "lo", "la", "los", "las", "él", "ella", "ellos", "ellas", "usted", "ustedes", "mí", "ti", "sí", "nosotros", "nosotras", "vosotros", "vosotras", "le", "les", "me", "te", "se", "nos", "os", "este", "esta", "estos", "estas", "aquel", "aquella", "aquellos", "aquellas", "esto", "eso", "aquello", "aquí", "ahí", "allí", "allá", "acá", "al", "del", "y", "e", "i", "o", "u", "pero", "sin embargo", "no obstante", "aunque", "si", "porque", "que", "quien", "quienes", "cual", "cuales", "cuyo", "cuya", "cuyos", "cuyas", "donde", "cuando", "como", "cuanto", "cuanta", "cuantos", "cuantas", "el", "la", "los", "las", "es", "son", "era", "eran", "será", "serán", "ha", "han", "había", "habían", "he", "has", "hemos", "habéis", "habrá", "habrán", "habría", "habrían", "soy", "eres", "somos", "sois", "fui", "fuiste", "fuimos", "fuisteis", "fue", "fueron", "seré", "serás", "seremos", "seréis", "será", "serán", "sea", "seas", "seamos", "seáis", "sean", "habré", "habrás", "habremos", "habréis", "habrá", "habrán", "habría", "habrías", "habríamos", "habríais", "habrían", "he", "has", "hemos", "habéis", "han", "había", "habías", "habíamos", "habíais", "habían", "hube", "hubiste", "hubimos", "hubisteis", "hubo", "hubieron", "habré", "habrás", "habremos", "habréis", "habrán", "habría", "habrías", "habríamos", "habríais", "habrían", "haga", "hagas", "hagamos", "hagáis", "hagan", "hice", "hiciste", "hicimos", "hicisteis", "hizo", "hicieron"]
+    palabras = texto.lower().split()
+    palabras_filtradas = [palabra for palabra in palabras if palabra not in stopwords_es]
+    return " ".join(palabras_filtradas)
+
+texto_ejemplo = "Este es un ejemplo de texto con algunas palabras que son consideradas stop words en español."
+texto_sin_stopwords = eliminar_stopwords_basico(texto_ejemplo)
+print(f"Texto original: {texto_ejemplo}")
+print(f"Texto sin stop words: {texto_sin_stopwords}")
+
+Ventajas: Sencillo de entender e implementar.
+Desventajas: La lista de stop words puede no ser exhaustiva y puede necesitar ser actualizada. No considera las diferentes formas de las palabras (plurales, conjugaciones verbales, etc.).
+---------------------------------------------------------------------------------------------------
+2. Usando la biblioteca NLTK (Natural Language Toolkit):
+
+NLTK es una biblioteca muy popular para PLN en Python y proporciona una lista de stop words en varios idiomas, incluyendo el español.
+Python
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+# Asegúrate de descargar los recursos necesarios si no los tienes
+try:
+    stopwords.words('spanish')
+except LookupError:
+    nltk.download('stopwords')
+try:
+    word_tokenize("ejemplo") # Intenta tokenizar para verificar la descarga
+except LookupError:
+    nltk.download('punkt')
+
+def eliminar_stopwords_nltk(texto):
+    stop_words_es = set(stopwords.words('spanish'))
+    palabras = word_tokenize(texto.lower())
+    palabras_filtradas = [palabra for palabra in palabras if palabra not in stop_words_es and palabra.isalnum()] # isalnum() para quitar signos de puntuación
+    return " ".join(palabras_filtradas)
+
+texto_ejemplo = "Este es un ejemplo de texto con algunas palabras que son consideradas stop words en español, como 'es' y 'con'."
+texto_sin_stopwords = eliminar_stopwords_nltk(texto_ejemplo)
+print(f"Texto original: {texto_ejemplo}")
+print(f"Texto sin stop words (con NLTK): {texto_sin_stopwords}")
+
+Ventajas: Proporciona una lista de stop words más completa y mantenida. Incluye funcionalidades para tokenización (dividir el texto en palabras), lo cual es útil para un procesamiento más avanzado.
+Desventajas: Necesitas instalar la biblioteca NLTK y descargar los recursos de stop words.
+
+3. Usando la biblioteca spaCy:
+
+spaCy es otra biblioteca de PLN de alto rendimiento que también incluye soporte para stop words en varios idiomas.
+Python
+
+import spacy
+
+# Descarga el modelo de lenguaje en español si no lo tienes
+try:
+    nlp = spacy.load("es_core_news_sm")
+except OSError:
+    print("Descargando modelo de lenguaje en español ('es_core_news_sm')...")
+    spacy.cli.download("es_core_news_sm")
+    nlp = spacy.load("es_core_news_sm")
+
+def eliminar_stopwords_spacy(texto):
+    doc = nlp(texto.lower())
+    palabras_filtradas = [token.text for token in doc if not token.is_stop and not token.is_punct]
+    return " ".join(palabras_filtradas)
+
+texto_ejemplo = "Este es un ejemplo de texto con algunas palabras que son consideradas stop words en español, incluyendo signos de puntuación como la coma."
+texto_sin_stopwords = eliminar_stopwords_spacy(texto_ejemplo)
+print(f"Texto original: {texto_ejemplo}")
+print(f"Texto sin stop words (con spaCy): {texto_sin_stopwords}")
+
+Ventajas: Muy eficiente y proporciona un análisis lingüístico más rico (lematización, etiquetado de partes del discurso, etc.). La lista de stop words está bien integrada con el modelo de lenguaje. También maneja la puntuación de forma sencilla.
+Desventajas: Necesitas instalar la biblioteca spaCy y descargar el modelo de lenguaje en español.
+
+¿Cuál método elegir?
+
+    Para tareas sencillas o cuando no necesitas una lista de stop words muy exhaustiva, la primera opción (usando una lista predefinida) puede ser suficiente.
+    Si buscas una lista de stop words más completa y ya estás trabajando con NLTK para otras tareas de PLN, la segunda opción es una buena elección.
+    Si priorizas el rendimiento y deseas aprovechar las capacidades de análisis lingüístico más avanzadas, spaCy (tercera opción) es generalmente la mejor opción.
+
+Recuerda que la efectividad de eliminar stop words depende del contexto de tu tarea de PLN. En algunos casos, estas palabras pueden ser importantes para el significado. ¡Experimenta con diferentes enfoques para ver cuál funciona mejor para tu caso!
