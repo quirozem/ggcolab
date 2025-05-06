@@ -1,0 +1,21 @@
+Lematizar y stematizar
+Característica	Stematización (Stemming)			Lematización (Lemmatization)
+Objetivo	Reducir a una raíz (no siempre palabra)		Reducir al lema (forma de diccionario)
+Método		Reglas heurísticas de corte			Análisis morfológico, diccionarios, reglas gramaticales
+Resultado	Raíces, algunas sin significado			Palabras léxicamente correctas
+Complejidad	Baja						Alta
+Velocidad	Rápida						Lenta
+Precisión	Menor						Mayor
+--------------------------------------------------------------------------
+import spacy
+
+# Cargar el modelo de lenguaje en español
+nlp = spacy.load("es_core_news_sm")
+
+texto = "Los niños corrían rápidamente y cantaban canciones felices."
+doc = nlp(texto)
+
+lemas = [token.lemma_ for token in doc]
+print(lemas)
+# Resultado: ['el', 'niño', 'correr', 'rápidamente', 'y', 'cantar', 'canción', 'feliz', '.']
+------------------------------------------------------------------------------
